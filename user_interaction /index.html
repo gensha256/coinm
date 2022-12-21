@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+<h1>Data</h1>
+
+<div>
+    <h3>All data</h3>
+
+    <div>
+        <button id="b-all">Show</button>
+    </div>
+
+
+    <div>
+        <span id="s-all"></span>
+    </div>
+</div>
+
+<div>
+
+    <h3>Data by symbol</h3>
+
+    <div>
+        <form class="get_symbol">
+
+            <label>Symbol</label>
+            <input type="text" id="symbol_get">
+            <button>Show</button>
+
+
+        </form>
+    </div>
+
+    <div>
+        <span id="s-symbol"></span>
+    </div>
+
+</div>
+
+<div>
+    <h3>Data by symbol and type</h3>
+    <div>
+        <form class="get_symbol_type">
+
+            <label>Symbol</label>
+            <input type="text" id="get_symbol">
+            <label>Data-Type</label>
+            <input list="type_symbol">
+            <datalist id="type_symbol">
+                <option value="volume_24h"/>
+                <option value="volume_change_24h"/>
+                <option value="percent_change_1h"/>
+            </datalist>
+            <button>Show</button>
+
+        </form>
+
+        <span id="s-symbol-type"></span>
+    </div>
+
+</div>
+<script type="application/javascript">
+
+    const dataAll = document.getElementById('b-all');
+    const dataSymbol = document.querySelector('.get_symbol');
+    const symbolType = document.querySelector('.get_symbol_type');
+
+
+    dataAll.addEventListener('click', function () {
+        httpReq('cryptocurrency/', spanData)
+    });
+
+    dataSymbol.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const symbol = document.getElementById('symbol_get')
+        httpReq(`cryptocurrency/:${symbol.value}`, spanDataSymbol);
+
+        event.target.reset();
+    });
+
+    symbolType.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const symbol = document.getElementById('get_symbol');
+        const type = document.getElementById('type_symbol');
+        httpReq(`cryptocurrency/:${symbol.value}/:${type.value}`, spanSymbolType);
+
+        event.target.reset();
+    });
+
+
+    const spanData = document.getElementById('s-all');
+    const spanDataSymbol = document.getElementById('s-symbol');
+    const spanSymbolType = document.getElementById('s-symbol-type');
+
+    function httpReq(url, elem) {
+
+        const http = new XMLHttpRequest();
+
+        http.open('GET', `http://127.0.0.1:3000/${url}`)
+        http.send();
+
+        http.onload = function (e) {
+            const result = http.response;
+            elem.append(result);
+        }
+    }
+
+
+
+</script>
+</body>
+</html>
